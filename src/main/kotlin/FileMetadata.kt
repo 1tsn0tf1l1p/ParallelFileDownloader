@@ -1,0 +1,1 @@
+data class FileMetadata(val size: Long, val supportsParallel: Boolean)

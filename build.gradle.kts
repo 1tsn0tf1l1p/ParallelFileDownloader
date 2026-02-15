@@ -5,12 +5,17 @@ plugins {
 group = "com.example"
 version = "1.0-SNAPSHOT"
 
+val ktor_version: String by project
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
     testImplementation(kotlin("test"))
+    testImplementation("io.ktor:ktor-client-mock:${ktor_version}")
+    implementation("io.ktor:ktor-client-core:${ktor_version}")
+    implementation("io.ktor:ktor-client-cio:${ktor_version}")
 }
 
 kotlin {
