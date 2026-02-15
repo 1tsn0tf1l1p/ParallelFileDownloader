@@ -1,3 +1,6 @@
+import exceptions.ConnectionException
+import exceptions.MetadataFetchException
+import exceptions.RequestTimeoutException
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
@@ -133,18 +136,33 @@ class FetcherTest {
     }
 
     @Test
-    fun `getFileMetadata throws NetworkFetchException when connection fails`() = runBlocking {
+    fun `getFileMetadata throws ConnectionException when connection fails`() = runBlocking {
         val mockEngine = MockEngine { _ ->
-            throw Exception("Connection failed")
+            throw java.io.IOException("Connection failed")
         }
         val client = HttpClient(mockEngine)
         val url = "http://example.com/file.txt"
 
-        val exception = assertFailsWith<NetworkFetchException> {
+        val exception = assertFailsWith<ConnectionException> {
             getFileMetadata(client, url)
         }
 
-        assertTrue(exception.message!!.contains("Failed to connect to the provided URL"))
+        assertTrue(exception.message!!.contains("Network error or connection dropped for URL"))
         assertEquals("Connection failed", exception.cause?.message)
+    }
+
+    @Test
+    fun `getFileMetadata throws RequestTimeoutException when request times out`() = runBlocking {
+        val mockEngine = MockEngine { _ ->
+            throw io.ktor.client.plugins.HttpRequestTimeoutException("http://example.com/file.txt", 1000L, null)
+        }
+        val client = HttpClient(mockEngine)
+        val url = "http://example.com/file.txt"
+
+        val exception = assertFailsWith<RequestTimeoutException> {
+            getFileMetadata(client, url)
+        }
+
+        assertTrue(exception.message!!.contains("Request timed out for URL"))
     }
 }

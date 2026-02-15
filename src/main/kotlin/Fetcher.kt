@@ -1,14 +1,21 @@
+import exceptions.ConnectionException
+import exceptions.MetadataFetchException
+import exceptions.RequestTimeoutException
 import io.ktor.client.HttpClient
+import io.ktor.client.plugins.HttpRequestTimeoutException
 import io.ktor.client.request.head
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpHeaders
 import io.ktor.http.isSuccess
+import java.io.IOException
 
 suspend fun getFileMetadata(client: HttpClient, url: String): FileMetadata {
     val response: HttpResponse = try {
         client.head(url)
-    } catch (e: Exception) {
-        throw NetworkFetchException("Failed to connect to the provided URL: $url", e)
+    } catch (e: HttpRequestTimeoutException) {
+        throw RequestTimeoutException(url, e)
+    } catch (e: IOException) {
+        throw ConnectionException(url, e)
     }
 
     if (!response.status.isSuccess()) {
