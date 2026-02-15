@@ -131,4 +131,20 @@ class FetcherTest {
         assertEquals(0L, metadata.size)
         assertFalse(metadata.supportsParallel)
     }
+
+    @Test
+    fun `getFileMetadata throws NetworkFetchException when connection fails`() = runBlocking {
+        val mockEngine = MockEngine { _ ->
+            throw Exception("Connection failed")
+        }
+        val client = HttpClient(mockEngine)
+        val url = "http://example.com/file.txt"
+
+        val exception = assertFailsWith<NetworkFetchException> {
+            getFileMetadata(client, url)
+        }
+
+        assertTrue(exception.message!!.contains("Failed to connect to the provided URL"))
+        assertEquals("Connection failed", exception.cause?.message)
+    }
 }
