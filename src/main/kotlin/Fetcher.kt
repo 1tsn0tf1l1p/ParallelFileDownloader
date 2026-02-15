@@ -13,9 +13,9 @@ suspend fun getFileMetadata(client: HttpClient, url: String): FileMetadata {
     val response: HttpResponse = try {
         client.head(url)
     } catch (e: HttpRequestTimeoutException) {
-        throw RequestTimeoutException(url, e)
+        throw RequestTimeoutException("Request timed out for URL: $url", e)
     } catch (e: IOException) {
-        throw ConnectionException(url, e)
+        throw ConnectionException("Network error or connection dropped for URL: $url", e)
     }
 
     if (!response.status.isSuccess()) {
