@@ -17,7 +17,6 @@ dependencies {
     implementation("io.ktor:ktor-client-core:${ktor_version}")
     implementation("io.ktor:ktor-client-cio:${ktor_version}")
     
-    // Add this line for logging
     implementation("ch.qos.logback:logback-classic:1.4.14")
 }
 
