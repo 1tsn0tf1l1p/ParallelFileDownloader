@@ -1,15 +1,23 @@
+package utils
+
+import config.Config
 import exceptions.ConnectionException
 import exceptions.MetadataFetchException
 import exceptions.RequestTimeoutException
-import io.ktor.client.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import model.FileMetadata
 import java.io.IOException
+import org.slf4j.LoggerFactory
 
-suspend fun getFileMetadata(client: HttpClient, url: String): FileMetadata {
+private val logger = LoggerFactory.getLogger("Fetcher")
+
+suspend fun getFileMetadata(): FileMetadata {
+    val client = Config.client
+    val url = Config.url
+    logger.debug("Sending HEAD request to {}", url)
     val response: HttpResponse = try {
         client.head(url)
     } catch (e: HttpRequestTimeoutException) {

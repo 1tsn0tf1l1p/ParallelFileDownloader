@@ -1,18 +1,21 @@
+package utils
+
 import exceptions.ChunkDownloadException
 import exceptions.ConnectionException
 import exceptions.RequestTimeoutException
-import io.ktor.client.HttpClient
-import io.ktor.client.plugins.HttpRequestTimeoutException
-import io.ktor.client.request.get
-import io.ktor.client.request.header
-import io.ktor.client.statement.HttpResponse
-import io.ktor.client.statement.readRawBytes
-import io.ktor.http.HttpHeaders
-import io.ktor.http.isSuccess
+import io.ktor.client.*
+import io.ktor.client.plugins.*
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
+import io.ktor.http.*
 import model.Chunk
 import java.io.IOException
+import org.slf4j.LoggerFactory
+
+private val logger = LoggerFactory.getLogger("Downloader")
 
 suspend fun downloadChunk(client: HttpClient, url: String, chunk: Chunk): ByteArray {
+    logger.debug("Downloading chunk {}: [{} - {}]", chunk.id, chunk.startByte, chunk.endByte)
     try {
         val response: HttpResponse = client.get(url) {
             if (chunk.endByte != -1L) {

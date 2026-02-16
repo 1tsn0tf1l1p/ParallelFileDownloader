@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import utils.downloadChunk
 import java.io.IOException
 
 class DownloaderTest {
@@ -61,7 +62,7 @@ class DownloaderTest {
         val exception = assertThrows<RequestTimeoutException> {
             downloadChunk(client, "http://example.com", chunk)
         }
-        
+
         assertEquals("Chunk 1 timed out for URL: http://example.com", exception.message)
     }
 
@@ -76,7 +77,7 @@ class DownloaderTest {
         val exception = assertThrows<ConnectionException> {
             downloadChunk(client, "http://example.com", chunk)
         }
-        
+
         assertEquals("Chunk 1 connection dropped for URL: http://example.com", exception.message)
     }
 
@@ -125,6 +126,7 @@ class DownloaderTest {
 
         assertNull(capturedRange)
     }
+
     @Test
     fun `downloadChunk returns bytes on 206 Partial Content success`() = runBlocking {
         val expectedBytes = "partial_data".toByteArray()

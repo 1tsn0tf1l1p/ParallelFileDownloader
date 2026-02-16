@@ -1,3 +1,4 @@
+import config.Config
 import exceptions.ConnectionException
 import exceptions.MetadataFetchException
 import exceptions.RequestTimeoutException
@@ -5,6 +6,7 @@ import io.ktor.client.*
 import io.ktor.client.engine.mock.*
 import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
+import utils.getFileMetadata
 import kotlin.test.*
 
 class FetcherTest {
@@ -21,10 +23,10 @@ class FetcherTest {
                 )
             )
         }
-        val client = HttpClient(mockEngine)
-        val url = "http://example.com/file.txt"
+        Config.client = HttpClient(mockEngine)
+        Config.url = "http://example.com/file.txt"
 
-        val metadata = getFileMetadata(client, url)
+        val metadata = getFileMetadata()
 
         assertEquals(1024L, metadata.size)
         assertTrue(metadata.supportsParallel)
@@ -41,10 +43,10 @@ class FetcherTest {
                 )
             )
         }
-        val client = HttpClient(mockEngine)
-        val url = "http://example.com/file.txt"
+        Config.client = HttpClient(mockEngine)
+        Config.url = "http://example.com/file.txt"
 
-        val metadata = getFileMetadata(client, url)
+        val metadata = getFileMetadata()
 
         assertEquals(2048L, metadata.size)
         assertFalse(metadata.supportsParallel)
@@ -61,10 +63,10 @@ class FetcherTest {
                 )
             )
         }
-        val client = HttpClient(mockEngine)
-        val url = "http://example.com/file.txt"
+        Config.client = HttpClient(mockEngine)
+        Config.url = "http://example.com/file.txt"
 
-        val metadata = getFileMetadata(client, url)
+        val metadata = getFileMetadata()
 
         assertEquals(0L, metadata.size)
         assertTrue(metadata.supportsParallel)
@@ -78,11 +80,11 @@ class FetcherTest {
                 status = HttpStatusCode.NotFound
             )
         }
-        val client = HttpClient(mockEngine)
-        val url = "http://example.com/file.txt"
+        Config.client = HttpClient(mockEngine)
+        Config.url = "http://example.com/file.txt"
 
         val exception = assertFailsWith<MetadataFetchException> {
-            getFileMetadata(client, url)
+            getFileMetadata()
         }
 
         assertEquals(HttpStatusCode.NotFound, exception.statusCode)
@@ -100,10 +102,10 @@ class FetcherTest {
                 )
             )
         }
-        val client = HttpClient(mockEngine)
-        val url = "http://example.com/file.txt"
+        Config.client = HttpClient(mockEngine)
+        Config.url = "http://example.com/file.txt"
 
-        val metadata = getFileMetadata(client, url)
+        val metadata = getFileMetadata()
 
         assertTrue(metadata.supportsParallel, "Should support parallel even if 'Bytes' is capitalized")
     }
@@ -119,10 +121,10 @@ class FetcherTest {
                 )
             )
         }
-        val client = HttpClient(mockEngine)
-        val url = "http://example.com/file.txt"
+        Config.client = HttpClient(mockEngine)
+        Config.url = "http://example.com/file.txt"
 
-        val metadata = getFileMetadata(client, url)
+        val metadata = getFileMetadata()
 
         assertEquals(0L, metadata.size)
         assertFalse(metadata.supportsParallel)
@@ -133,11 +135,11 @@ class FetcherTest {
         val mockEngine = MockEngine { _ ->
             throw java.io.IOException("Connection failed")
         }
-        val client = HttpClient(mockEngine)
-        val url = "http://example.com/file.txt"
+        Config.client = HttpClient(mockEngine)
+        Config.url = "http://example.com/file.txt"
 
         val exception = assertFailsWith<ConnectionException> {
-            getFileMetadata(client, url)
+            getFileMetadata()
         }
 
         assertTrue(exception.message!!.contains("Network error or connection dropped for URL"))
@@ -149,11 +151,11 @@ class FetcherTest {
         val mockEngine = MockEngine { _ ->
             throw io.ktor.client.plugins.HttpRequestTimeoutException("http://example.com/file.txt", 1000L, null)
         }
-        val client = HttpClient(mockEngine)
-        val url = "http://example.com/file.txt"
+        Config.client = HttpClient(mockEngine)
+        Config.url = "http://example.com/file.txt"
 
         val exception = assertFailsWith<RequestTimeoutException> {
-            getFileMetadata(client, url)
+            getFileMetadata()
         }
 
         assertTrue(exception.message!!.contains("Request timed out for URL"))

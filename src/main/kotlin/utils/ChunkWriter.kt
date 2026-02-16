@@ -1,9 +1,11 @@
+package utils
+
+import exceptions.FileWriteException
+import java.io.IOException
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
-import java.io.IOException
-import exceptions.FileWriteException
 
 class ChunkWriter(filePath: Path) : AutoCloseable {
 
@@ -37,7 +39,7 @@ class ChunkWriter(filePath: Path) : AutoCloseable {
 
     fun setLength(totalSize: Long) {
         if (totalSize < 0) return
-        
+
         try {
             if (channel.size() < totalSize) {
                 val singleByte = ByteBuffer.allocate(1)

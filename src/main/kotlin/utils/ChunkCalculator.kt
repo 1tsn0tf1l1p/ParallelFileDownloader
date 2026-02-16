@@ -1,3 +1,6 @@
+package utils
+
+import config.Config
 import model.Chunk
 import model.FileMetadata
 
