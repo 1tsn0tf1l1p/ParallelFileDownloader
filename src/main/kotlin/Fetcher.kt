@@ -9,7 +9,9 @@ import io.ktor.http.*
 import model.FileMetadata
 import java.io.IOException
 
-suspend fun getFileMetadata(client: HttpClient, url: String): FileMetadata {
+suspend fun getFileMetadata(): FileMetadata {
+    val client = Config.client
+    val url = Config.url
     val response: HttpResponse = try {
         client.head(url)
     } catch (e: HttpRequestTimeoutException) {
