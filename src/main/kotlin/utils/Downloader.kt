@@ -10,8 +10,12 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import model.Chunk
 import java.io.IOException
+import org.slf4j.LoggerFactory
+
+private val logger = LoggerFactory.getLogger("Downloader")
 
 suspend fun downloadChunk(client: HttpClient, url: String, chunk: Chunk): ByteArray {
+    logger.debug("Downloading chunk {}: [{} - {}]", chunk.id, chunk.startByte, chunk.endByte)
     try {
         val response: HttpResponse = client.get(url) {
             if (chunk.endByte != -1L) {
