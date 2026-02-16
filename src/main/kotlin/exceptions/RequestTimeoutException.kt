@@ -1,4 +1,4 @@
 package exceptions
 
-class RequestTimeoutException(url: String, cause: Throwable) :
-    NetworkFetchException("Request timed out for URL: $url", cause)
+class RequestTimeoutException(message: String, cause: Throwable) :
+    NetworkFetchException(message, cause)
