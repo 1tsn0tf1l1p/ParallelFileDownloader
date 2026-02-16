@@ -1,3 +1,5 @@
+import config.Config
+import utils.DownloadManager
 import java.nio.file.Paths
 
 suspend fun main() {

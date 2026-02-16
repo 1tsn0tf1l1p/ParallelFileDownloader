@@ -1,3 +1,4 @@
+import config.Config
 import exceptions.ConnectionException
 import exceptions.MetadataFetchException
 import exceptions.RequestTimeoutException
@@ -5,6 +6,7 @@ import io.ktor.client.*
 import io.ktor.client.engine.mock.*
 import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
+import utils.getFileMetadata
 import kotlin.test.*
 
 class FetcherTest {

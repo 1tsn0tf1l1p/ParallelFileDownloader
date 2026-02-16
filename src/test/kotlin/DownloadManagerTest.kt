@@ -1,9 +1,12 @@
+import config.Config
 import io.ktor.client.*
 import io.ktor.client.engine.mock.*
 import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
+import utils.DownloadManager
 import java.nio.file.Files
-import kotlin.test.*
+import kotlin.test.Test
+import kotlin.test.assertContentEquals
 
 class DownloadManagerTest {
 
@@ -46,7 +49,7 @@ class DownloadManagerTest {
                     respond(content = "Not Found", status = HttpStatusCode.NotFound)
                 }
             }
-            
+
             Config.client = HttpClient(mockEngine)
             Config.url = url
             val downloadManager = DownloadManager(Config.client)

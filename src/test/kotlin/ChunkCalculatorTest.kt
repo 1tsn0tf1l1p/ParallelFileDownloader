@@ -1,4 +1,6 @@
+import config.Config
 import model.FileMetadata
+import utils.ChunkCalculator
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

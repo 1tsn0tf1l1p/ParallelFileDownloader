@@ -1,7 +1,8 @@
+package utils
+
 import io.ktor.client.*
 import kotlinx.coroutines.*
 import java.nio.file.Path
-import java.nio.file.Paths
 
 class DownloadManager(private val client: HttpClient) {
 
@@ -23,7 +24,7 @@ class DownloadManager(private val client: HttpClient) {
                 jobs.awaitAll()
             }
         }
-        
+
         println("Download completed: $destinationPath")
     }
 }
