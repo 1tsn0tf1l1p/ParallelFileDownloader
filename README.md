@@ -1,6 +1,6 @@
 ### Parallel File Downloader
 
-A high-performance Kotlin utility for parallel file downloads using Coroutines and Ktor.
+Kotlin utility for parallel file downloads using Coroutines and Ktor.
 
 #### Project Structure
 - `src/main/kotlin/`
